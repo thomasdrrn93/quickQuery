@@ -1,5 +1,6 @@
 require_relative 'searchable'
 require 'active_support/inflector'
+require 'byebug'
 
 class AssocOptions
   attr_accessor(
@@ -9,7 +10,7 @@ class AssocOptions
   )
 
   def model_class
-    self.class_name.constantize
+    self.class_name.to_s.constantize
   end
 
   def table_name
@@ -101,7 +102,37 @@ module Associatable
       WHERE
         #{through_table}.#{through_prim} = ?
       SQL
-      source_options.model_class.parse_all(query).last
+      source_options.model_class.parse_all(query).first
+    end
+  end
+
+  def has_many_through(name, through_name, source_name)
+    define_method(name) do
+      through_options = self.class.assoc_options[through_name]
+      source_options = through_options.model_class.assoc_options[source_name]
+
+      through_table = through_options.table_name
+      through_prim = through_options.primary_key
+      through_foreign = through_options.foreign_key
+
+      source_table = source_options.table_name
+      source_prim = source_options.primary_key
+      source_foreign = source_options.foreign_key
+
+      value = self.id
+      query = DBConnection.execute(<<-SQL, value)
+      SELECT
+        #{source_table}.*
+      FROM
+        #{through_table}
+      JOIN
+        #{source_table}
+      ON
+        #{source_table}.#{source_foreign} = #{through_table}.#{source_prim}
+      WHERE
+        #{through_table}.#{through_foreign} = ?
+      SQL
+      source_options.model_class.parse_all(query)
     end
   end
 end
