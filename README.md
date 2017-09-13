@@ -4,7 +4,26 @@ quickQuery is a Ruby object-relational mapping framework inspired by Rails' Acti
 
 ## Getting Started
 
-After cloning this repo, open up pry in your terminal. In pry load 'sample.rb'. This file sets up three models (Artist, Album, and Song). The database has already been seeded with data. After loading the file, test out the database querying and association methods.
+After cloning this repo, open up pry in your terminal. In pry type load 'sample.rb'. This file sets up three models (Artist, Album, and Song). The database has already been seeded with data. After loading the file, test out the database querying and association methods.
+
+### Test
+
+Test the find method by typing Album.find(1) in the terminal. It should return the following.
+![pic](/assets/albumfind.png)
+
+Test the all method by typing Artist.all in the terminal. It should return the following.
+![pic](/assets/artistall.png)
+
+Test the has many association by typing Album.find(3).songs in the terminal. It should return the following.
+![pic](/assets/hasmany.png)
+
+Test the has many through association by typing Artist.first.songs in the terminal. It should return the following.
+![pic](/assets/hasmanythrough.png)     
+
+Test the has one through association by typing Song.find(1).artist in the terminal. It should return the following.
+![pic](/assets/hasonethrough.png)
+
+### Methods
 
 #### ::columns
   Returns an array of columns in a particular model's table.

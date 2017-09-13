@@ -14,7 +14,7 @@ class Album < SQLObject
     class_name: :Song
 
   belongs_to :artist,
-    class_name: :artist
+    class_name: :Artist
 
   finalize!
 end
